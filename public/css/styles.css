@@ -26,10 +26,13 @@ body {
 #top-header {
   display: flex;
         flex-direction: row;
-        justify-self: space-between;
+        
         align-items: center;
         background: #222;
     color: #fff;
+    }
+    #tools {
+      margin-left: auto;
     }
 
 #top-header .siteName a {
@@ -86,6 +89,17 @@ nav ul li:hover {
     width: 100%;
     background: white;
     }
+
+    main :nth-child(1) {
+  order: 1;
+}
+main :nth-child(2) {
+  order: 3;
+}
+main :nth-child(3) {
+  order: 2;
+}
+
 .main-display {
     
     display: flex;
@@ -283,6 +297,13 @@ main {
   width: 100%;
   background: white;
   }
+
+  main :nth-child(2) {
+  order: 2;
+}
+main :nth-child(3) {
+  order: 3;
+}
         
     
     .main-display {
@@ -294,6 +315,10 @@ main {
     align-items: flex-start;
     padding: 1rem;
     
+}
+#tools {
+  margin-left: 1px;
+
 }
 
 #top-header #tools {
