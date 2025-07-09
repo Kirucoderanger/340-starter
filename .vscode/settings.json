@@ -9,21 +9,8 @@
             "previewLimit": 50,
             "server": "localhost",
             "driver": "PostgreSQL",
-            "name": "render.com",
-            "connectString": "postgresql://cse340:GSDxVsURxOco03Z4lX4ggxnmeLU5mArS@dpg-d1i1roq4d50c73eihtcg-a.frankfurt-postgres.render.com/cse340_um9y"
-        },
-        {
-            "pgOptions": {
-                "ssl": {
-                    "rejectUnauthorized": true
-                }
-            },
-            "previewLimit": 50,
-            "server": "localhost",
-            "driver": "PostgreSQL",
-            "name": "starter340sce",
-            "group": "starter340sce",
-            "connectString": "postgresql://starter340sce:XZlPuqCpiDu9Zds1GCnXxmrJjFlT1ERg@dpg-d1n9b4c9c44c73ctiqt0-a.frankfurt-postgres.render.com/starter340sce"
+            "name": "starter340cse",
+            "connectString": "postgresql://starter340cse:6l8vMmw3Ui5ZsOZqXti2LpAqFJrGaxxy@dpg-d1nas3adbo4c73fvnm5g-a.frankfurt-postgres.render.com/starter340cse"
         }
     ]
 }
