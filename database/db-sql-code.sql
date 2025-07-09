@@ -1,10 +1,10 @@
 -- query 1
-DROP TYPE IF EXISTS public.user_type;
-CREATE TYPE public.user_type AS ENUM
+DROP TYPE IF EXISTS public.account_type;
+CREATE TYPE public.account_type AS ENUM
     ('client', 'employee', 'admin');
 
-ALTER TYPE public.user_type
-    OWNER TO cse340;
+ALTER TYPE public.account_type
+    OWNER TO starter340cse;
 
 
 --query 2
