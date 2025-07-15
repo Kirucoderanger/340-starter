@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Launch",
+            "address": "localhost",
+            "port": 9229,
+            "restart": false,
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "protocol": "inspector",
+            "console": "integratedTerminal",
+            "sourceMapPathOverrides": {
+                "webpack:///./*": "${workspaceFolder}/*",
+                "webpack:///src/*": "${workspaceFolder}/src/*",
+                "webpack:///./~/*": "${workspaceFolder}/node_modules/*"
+            },
+            "timeout": 10000
+        }
+    ]
+
+}
