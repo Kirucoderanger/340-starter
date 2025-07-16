@@ -6,7 +6,7 @@ const Util = {}
  ************************** */
 Util.getNav = async function (req, res, next) {
   let data = await invModel.getClassifications()
-  console.log(data)
+  //console.log(data)
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
   data.rows.forEach((row) => {
@@ -62,6 +62,20 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
+
+Util.getInventoryItemById = async function (inventory_id) {
+  let data = await invModel.getInventoryItemById(inventory_id)
+  let html = '<h1>' + data.inv_make + ' ' + data.inv_model + '</h1>'
+  html += '<p>Model: ' + data.inv_model + '</p>'
+  html += '<p>Year: ' + data.inv_year + '</p>'
+  html += '<p>Description: ' + data.inv_description + '</p>'
+  html += '<p>Image: <img src="' + data.inv_image + '" alt="' + data.inv_make + ' ' + data.inv_model + '"></p>'
+  //html += '<p>Thumbnail: <img src="../images/vehicles/' + data.inv_thumbnail + '" alt="' + data.inv_make + ' ' + data.inv_model + ' thumbnail"></p>'
+  html += '<p>Miles: ' + new Intl.NumberFormat('en-US').format(data.inv_miles) + '</p>'
+  html += '<p>Color: ' + data.inv_color + '</p>'
+  html += '<p>Price: $' + new Intl.NumberFormat('en-US').format(data.inv_price) + '</p>'
+  return html
+}
 
 
 /* ****************************************

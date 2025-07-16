@@ -344,3 +344,74 @@ nav ul li {
 
  }
 
+
+
+ #inv-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: 200px;
+
+    gap: 40px;
+    padding: 2rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    bottom: 20px;
+    width: 100%;
+    background: white;
+    list-style: none;
+    grid-column: 1/ 3;
+  }
+
+#inv-display li {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #333;
+}
+#inv-display li:hover {
+    transform: translateY(-5px);
+}
+#inv-display li img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 0rem;
+}
+#inv-display li h2 {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    color: #333;
+}
+#inv-display li p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+}
+#inv-display li a {
+    text-decoration: none;
+    color: inherit;
+}
+.namePrice span {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-top: 0.5rem;
+}
+#inv-display li .price::before {
+    content: '$';
+}
+#inv-display li .price::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: #ddd;
+    margin-top: 0.5rem;
+}
+

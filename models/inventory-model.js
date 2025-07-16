@@ -9,15 +9,33 @@ async function getClassifications(){
 }
 
 /* ***************************
-for single Item
-async function getClassificationById(classification_id) {
+ *  Get details of an inventory item by inventory ID
+ * ************************** */
+async function getInventoryItemById(inv_id) {
+  try {
+    const data = await pool.query(
+      `SELECT * FROM public.inventory WHERE inv_id = $1`,
+      [inv_id]
+    )
+    return data.rows[0]
+  } catch (error) {
+    console.error("get inventory item by id error " + error)
+  }
+}
+
+
+/* ***************************
+ *  Get details of a classification by classification ID
+ * ************************** */
+/*async function getClassificationById(classification_id) {
     const data = await pool.query(
       "SELECT * FROM public.classification WHERE classification_id = $1 ORDER BY classification_name",
        [classification_id]
     )
     return data.rows[0]
   }
-    */
+*/
+
 //or
 /*******
  * for multiple items
@@ -49,4 +67,4 @@ async function getInventoryByClassificationId(classification_id) {
 }
 
 
-module.exports = {getClassifications, getInventoryByClassificationId}
+module.exports = {getClassifications, getInventoryByClassificationId, getInventoryItemById}
