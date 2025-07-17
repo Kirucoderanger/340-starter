@@ -65,15 +65,15 @@ Util.buildClassificationGrid = async function(data){
 
 Util.getInventoryItemById = async function (inventory_id) {
   let data = await invModel.getInventoryItemById(inventory_id)
-  let html = '<h1>' + data.inv_make + ' ' + data.inv_model + '</h1>'
-  html += '<p>Model: ' + data.inv_model + '</p>'
-  html += '<p>Year: ' + data.inv_year + '</p>'
-  html += '<p>Description: ' + data.inv_description + '</p>'
-  html += '<p>Image: <img src="' + data.inv_image + '" alt="' + data.inv_make + ' ' + data.inv_model + '"></p>'
-  //html += '<p>Thumbnail: <img src="../images/vehicles/' + data.inv_thumbnail + '" alt="' + data.inv_make + ' ' + data.inv_model + ' thumbnail"></p>'
-  html += '<p>Miles: ' + new Intl.NumberFormat('en-US').format(data.inv_miles) + '</p>'
-  html += '<p>Color: ' + data.inv_color + '</p>'
+  let html = '<div class="inventory-item-details">'
+  html += '<img src="' + data.inv_image + '" alt="' + data.inv_make + ' ' + data.inv_model + '">'
+  html += '<h1>' + data.inv_make + ' ' + data.inv_model + ' ' + 'Details</h1>'
   html += '<p>Price: $' + new Intl.NumberFormat('en-US').format(data.inv_price) + '</p>'
+  html += '<p>Description: ' + data.inv_description + '</p>'
+  html += '<p>Color: ' + data.inv_color + '</p>'
+  html += '<p>Miles: ' + new Intl.NumberFormat('en-US').format(data.inv_miles) + '</p>'
+ 
+    html += '</div>'
   return html
 }
 

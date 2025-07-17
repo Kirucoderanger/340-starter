@@ -31,7 +31,7 @@ invCont.getInventoryItemById = async function (req, res, next) {
   const nav = await utilities.getNav()
   const itemDetails = await utilities.getInventoryItemById(inventory_id)
   res.render("./inventory/inventoryDetail", {
-    title: item.inv_make + " " + item.inv_model,
+    title: item.inv_year + " " + item.inv_make + " " + item.inv_model,
     nav,
     item: itemDetails,
   })
