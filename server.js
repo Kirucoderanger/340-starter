@@ -14,6 +14,11 @@ const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities/")
 
+const errorTriggerRoute = require("./routes/errorTrigger");
+app.use("/trigger-error", errorTriggerRoute);
+
+
+
 
 /* ***********************
  * View Engine and Templates
@@ -60,6 +65,11 @@ app.use(async (err, req, res, next) => {
     nav
   })
 })
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render("error", { error: err }); // Send to your error view
+});
 
 
 
