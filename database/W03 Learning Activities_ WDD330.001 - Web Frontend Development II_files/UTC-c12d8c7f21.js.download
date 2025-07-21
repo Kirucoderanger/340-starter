@@ -1,0 +1,2 @@
+(window.__PRELOADED_TIMEZONE_DATA__||(window.__PRELOADED_TIMEZONE_DATA__={}))["Etc/UTC"]={zones:{"Etc/UTC":["z",{wallclock:-1.7976931348623157e308,format:"UTC",abbrev:"UTC",offset:0,posix:-1.7976931348623157e308,save:0}]},rules:{}};
+//# sourceMappingURL=../../maps/timezone/Etc/UTC-c12d8c7f21.js.map
