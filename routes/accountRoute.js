@@ -5,6 +5,7 @@ const express = require("express")
 const router = new express.Router()
 const accountController = require("../controllers/accountController")
 const utilities = require("../utilities/")
+const regValidate = require('../utilities/account-validation')
 
 /**
  * Deliver login view
@@ -15,7 +16,12 @@ router.get("/login", utilities.handleErrors(accountController.buildLogin))
 router.get("/register", utilities.handleErrors(accountController.buildRegister))
 
 //register user in to database
-router.post('/register', utilities.handleErrors(accountController.registerAccount))
+router.post(
+    "/register", 
+    regValidate.registationRules(),
+    regValidate.checkRegData,
+    utilities.handleErrors(accountController.registerAccount)
+)
 //router.post('/register', accountController.registerAccount)
 //router.get("/forgot-password", utilities.handleErrors(accountController.buildForgotPassword))
 //router.get("/reset-password", utilities.handleErrors(accountController.buildResetPassword))
