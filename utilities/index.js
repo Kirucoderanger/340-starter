@@ -78,6 +78,23 @@ Util.getInventoryItemById = async function (inventory_id) {
 }
 
 
+Util.accountForm = function (formType) {
+  let form = `<form action="/account/${formType}" method="post">`
+  if (formType === "login") {
+    form += `<label for="email">Email Address:</label>
+             <input type="email" id="email" name="email" required>`
+  }
+  form += `<label for="password">Password:</label>
+           <input type="password" id="password" name="password" required>`
+  if (formType === "register") {
+    form += `<label for="confirmPassword">Confirm Password:</label>
+             <input type="password" id="confirmPassword" name="confirmPassword" required>`
+  }
+  form += `<button type="submit">${formType.charAt(0).toUpperCase() + formType.slice(1)}</button></form>`
+  return form
+}
+
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
