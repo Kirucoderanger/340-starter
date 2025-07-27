@@ -67,12 +67,14 @@ Util.buildClassificationGrid = async function(data){
 Util.getInventoryItemById = async function (inventory_id) {
   let data = await invModel.getInventoryItemById(inventory_id)
   let html = '<div class="inventory-item-details">'
-  html += '<img src="' + data.inv_image + '" alt="' + data.inv_make + ' ' + data.inv_model + '">'
+  html += '<div class="inventory-detail-image">' 
+  html += '<img src="' + data.inv_image + '" alt="' + data.inv_make + ' ' + data.inv_model + '"> </div>'
+  html += '<div class="inventory-detail-info">'
   html += '<h1>' + data.inv_make + ' ' + data.inv_model + ' ' + 'Details</h1>'
   html += '<p>Price: $' + new Intl.NumberFormat('en-US').format(data.inv_price) + '</p>'
   html += '<p>Description: ' + data.inv_description + '</p>'
   html += '<p>Color: ' + data.inv_color + '</p>'
-  html += '<p>Miles: ' + new Intl.NumberFormat('en-US').format(data.inv_miles) + '</p>'
+  html += '<p>Miles: ' + new Intl.NumberFormat('en-US').format(data.inv_miles) + '</p> </div>'
  
     html += '</div>'
   return html
@@ -146,7 +148,7 @@ Util.buildClassificationList = async function (classification_id = null) {
 Util.addInventoryForm = async function (classification_id = null, formData = {}) {
   const data = await invModel.getClassifications()
 
-  let addInventory = '<form action="/inv/add-inventory" method="post" class="inventory-form">'
+  let addInventory = '<div class="add-inventory-form-wrapper"><form action="/inv/add-inventory" method="post" class="inventory-form">'
 
   // Classification Dropdown
   /*addInventory += `
@@ -217,7 +219,7 @@ addInventory += `</select>
     <div class="form-group">
       <button type="submit">Add Inventory</button>
     </div>
-  </form>`
+  </form></div>`
 
   return addInventory
 }
@@ -341,7 +343,11 @@ Util.managementView = function () {
             <li><a href="/inv/add-inventory">Add New Inventory Item</a></li>
           </ul>`
 }
-
+Util.errorView = function () {
+  return `<h1>Error</h1>
+          <p>error showcase</p>
+          <a href="/">Go back to Home</a>`
+}
 
 /* ****************************************
  * Middleware For Handling Errors

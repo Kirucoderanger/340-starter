@@ -439,26 +439,25 @@ nav ul li {
 
 
 .inventory-item-details {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 2rem;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
     bottom: 20px;
     width: 100%;
     background: white;
     margin: 0 auto;
-  grid-column: 1/3;
-    display: flex;
-    flex-direction: column;
+  
     align-items: center;
     padding: 2rem;
     background: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     margin: 1rem auto;
-    max-width: 600px;
+    max-width: 800px;
 }
+
 
 .inventory-item-details img {
     max-width: 100%;
@@ -505,10 +504,14 @@ nav ul li {
 
 @media only screen and (min-width: 600px) {
     .inventory-item-details {
-        grid-template-columns: 1fr 1fr;
+        flex-direction: row;
         align-items: center;
+        grid-column: 1 / 3;
+        
     }
     .inventory-item-details img {
+        max-width: 400px;
+        height: auto;
         order: 0;
         
     }
@@ -539,6 +542,7 @@ nav a {
   padding: 4rem 1rem;
   background-color: #f8f9fa;
   min-height: 80vh;
+  grid-column: 1 / 3;
 }
 
 .login-form {
@@ -627,6 +631,8 @@ nav a {
   padding: 4rem 1rem;
   background-color: #f4f6f9;
   min-height: 90vh;
+  margin: 0 0 auto;
+  grid-column: 1 / 3;
 }
 
 .register-form {
@@ -736,6 +742,7 @@ nav a {
     padding: 2rem;
     background: #f7f9fc;
     min-height: 100vh;
+    grid-column: 1 / 3;
   }
 
   .form-wrapper {
@@ -801,6 +808,11 @@ nav a {
 
 
   /* Add inventory form styles */
+  .add-inventory-form-wrapper {
+    
+    grid-column: 1 / 3;
+  }
+
   .inventory-form {
   max-width: 600px;
   margin: auto;
@@ -857,3 +869,9 @@ nav a {
 .inventory-form button:hover {
   background-color: #005fa3;
 }
+
+
+.notice {
+  font-weight: 600;
+  color: red;
+} 

@@ -13,6 +13,7 @@ const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
+const errorTriggerRoute = require("./routes/errorTrigger");
 const utilities = require("./utilities/")
 const bodyParser = require("body-parser")
 
@@ -21,8 +22,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 
-const errorTriggerRoute = require("./routes/errorTrigger");
-app.use("/trigger-error", errorTriggerRoute);
+
+
 
 const session = require("express-session")
 const pool = require('./database/')
@@ -87,6 +88,10 @@ app.use("/account", accountRoute)
 
 app.use("/account", require("./routes/accountRoute"))
 
+app.use("/errors", errorTriggerRoute);
+
+
+
 // Body parser middleware
 //app.use(bodyParser.urlencoded({ extended: true }))
 //app.use(bodyParser.json())
@@ -108,7 +113,8 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-   if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route? '}
+   if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?  '}
+   //<img loading="lazy" src="https://serpstat.com/img/blog/how-to-create-a-5xx-error-page/1564678552pPwxC6P.png" alt="500 error page" width="740" hight="600"/>
   res.render("errors/error", {
     title: err.status || 'Server Error',
     message,
