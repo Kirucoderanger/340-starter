@@ -724,3 +724,136 @@ nav a {
   margin-top: -1rem;
   margin-bottom: 1rem;
 }
+
+
+
+
+/* Add classification form styles */
+.classification-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background: #f7f9fc;
+    min-height: 100vh;
+  }
+
+  .form-wrapper {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+  }
+
+  .form-wrapper h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+
+  .form-instructions {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    color: #666;
+  }
+
+  .classification-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+
+  .classification-form input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 1.25rem;
+    transition: border-color 0.3s;
+  }
+
+  .classification-form input[type="text"]:focus {
+    border-color: #007BFF;
+    outline: none;
+  }
+
+  .classification-form button {
+    width: 100%;
+    background-color: #007BFF;
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .classification-form button:hover {
+    background-color: #0056b3;
+  }
+
+
+
+
+  /* Add inventory form styles */
+  .inventory-form {
+  max-width: 600px;
+  margin: auto;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+.inventory-form .form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.inventory-form label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.inventory-form input,
+.inventory-form select {
+  padding: 0.6rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+/* Valid / Invalid Visual Feedback */
+.inventory-form input:valid,
+.inventory-form select:valid {
+  border-color: #4CAF50;
+  background-color: #eaffea;
+}
+
+.inventory-form input:invalid:focus,
+.inventory-form select:invalid:focus {
+  border-color: #f44336;
+  background-color: #ffeaea;
+}
+
+.inventory-form button {
+  padding: 0.75rem 1.5rem;
+  background-color: #0077cc;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.inventory-form button:hover {
+  background-color: #005fa3;
+}

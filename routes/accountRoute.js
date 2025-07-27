@@ -4,6 +4,7 @@
 const express = require("express")
 const router = new express.Router()
 const accountController = require("../controllers/accountController")
+
 const utilities = require("../utilities/")
 const regValidate = require('../utilities/account-validation')
 
@@ -22,10 +23,19 @@ router.post(
     regValidate.checkRegData,
     utilities.handleErrors(accountController.registerAccount)
 )
+
 //router.post('/register', accountController.registerAccount)
 //router.get("/forgot-password", utilities.handleErrors(accountController.buildForgotPassword))
 //router.get("/reset-password", utilities.handleErrors(accountController.buildResetPassword))
 //router.get("/account", utilities.handleErrors(accountController.buildAccount))
+
+// Process the login attempt
+router.post(
+  "/login",
+  (req, res) => {
+    res.status(200).send('login process')
+  }
+)
 
 module.exports = router;
 
