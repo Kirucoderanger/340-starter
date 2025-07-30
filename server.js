@@ -11,22 +11,32 @@ const env = require("dotenv").config()
 const app = express()
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
+const accountController = require("./controllers/accountController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
 const errorTriggerRoute = require("./routes/errorTrigger");
 const utilities = require("./utilities/")
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
+const session = require("express-session")
+const pool = require('./database/')
 
+
+//cookie parser 
+app.use(cookieParser())
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 
+// JWT check BEFORE route handling
+app.use(utilities.checkJWTToken)
 
 
 
-const session = require("express-session")
-const pool = require('./database/')
+
+
+
 
 
 /* ***********************
@@ -83,12 +93,16 @@ app.use(static)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory route
 app.use("/inv", inventoryRoute)
+//default route for accounts
+//app.use("/account", utilities.checkLogin, utilities.handleErrors(accountController.buildMyAccount))
 // Account route
 app.use("/account", accountRoute)
 
-app.use("/account", require("./routes/accountRoute"))
+
+//app.use("/account", require("./routes/accountRoute"))
 
 app.use("/errors", errorTriggerRoute);
+
 
 
 

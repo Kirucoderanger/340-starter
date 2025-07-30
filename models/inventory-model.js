@@ -161,5 +161,107 @@ async function addInventory(data) {
   }
 }
 
+//update inventory model
+async function editInventory(data) {
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_price,
+    inv_description,
+    inv_color,
+    inv_miles,
+    inv_image,
+    inv_thumbnail,
+    classification_id
+  } = data
 
-module.exports = {getClassifications, getInventoryByClassificationId, getInventoryItemById, addClassification, checkExistingClassification, addInventory}
+  try {
+    const sql = `
+      UPDATE public.inventory
+      SET inv_make = $1, inv_model = $2, inv_year = $3, inv_price = $4,
+          inv_description = $5, inv_color = $6, inv_miles = $7,
+          inv_image = $8, inv_thumbnail = $9, classification_id = $10
+      WHERE inv_id = $11
+      RETURNING *`
+
+    return await pool.query(sql, [
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_price,
+      inv_description,
+      inv_color,
+      inv_miles,
+      inv_image,
+      inv_thumbnail,
+      classification_id,
+      inv_id
+    ])
+  } catch (error) {
+    console.error("update inventory error: " + error)
+    return null
+  }
+}
+
+
+
+/*
+async function editInventory(data) {
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_price,
+    inv_description,
+    inv_color,
+    inv_miles,
+    inv_image,
+    inv_thumbnail,
+    classification_id
+    
+  } = data
+
+  try {
+    /*const sql = `INSERT INTO public.inventory 
+      (inv_make, inv_model, inv_year, inv_price, inv_description, inv_color, inv_miles, inv_image, inv_thumbnail, classification_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      RETURNING *`
+
+      const sql =`UPDATE public.inventory SET inv_make = $1, inv_model = $2, inv_year = $3, inv_price = $4, inv_description = $5, inv_color = $6, inv_miles = $7, inv_image = $8, inv_thumbnail = $9, classification_id = $10 WHERE inv_id = $11 RETURNING *`
+
+      /*const sql =`UPDATE public.inventory SET inv_make = $1, inv_model = $2, inv_description = $3, inv_image = $4, 
+      inv_thumbnail = $5, inv_price = $6, inv_year = $7, inv_miles = $8, inv_color = $9, classification_id = $10 
+      WHERE inv_id = $11 RETURNING *`
+    
+    
+    return await pool.query(sql, [
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_price,
+      inv_description,
+      inv_color,
+      inv_miles,
+      inv_image,
+      inv_thumbnail,
+      classification_id,
+      inv_id
+    ])
+  } catch (error) {
+    console.error("update inventory error " + error)
+    return error.message
+  }
+}*/
+
+module.exports = {
+  getClassifications, 
+  getInventoryByClassificationId, 
+  getInventoryItemById, 
+  addClassification, 
+  checkExistingClassification, 
+  addInventory,
+  editInventory
+}

@@ -2,6 +2,8 @@ const { name } = require("ejs")
 const invModel = require("../models/inventory-model")
 const Util = {}
 
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
@@ -149,23 +151,7 @@ Util.addInventoryForm = async function (classification_id = null, formData = {})
   const data = await invModel.getClassifications()
 
   let addInventory = '<div class="add-inventory-form-wrapper"><form action="/inv/add-inventory" method="post" class="inventory-form">'
-
-  // Classification Dropdown
-  /*addInventory += `
-    <div class="form-group">
-      <label for="classification_id">Classification:</label>
-      <select name="classification_id" id="classification_id" required>
-        <option value="">Choose a Classification</option>`
-
-  data.rows.forEach((row) => {
-    const selected = classification_id == row.classification_id ? "selected" : ""
-    addInventory += `<option value="${row.classification_id}" ${selected}>${row.classification_name}</option>`
-  })
-
-  addInventory += `</select>
-    </div>`*/
-
-    const selectedValue = formData.classification_id || classification_id
+  const selectedValue = formData.classification_id || classification_id
 
 addInventory += `
   <div class="form-group">
@@ -224,98 +210,60 @@ addInventory += `</select>
   return addInventory
 }
 
-
-
-
-/*Util.addInventoryForm = async function (classification_id = null) {
-  //const classificationList = Util.buildClassificationList();
-  let data = await invModel.getClassifications();
-  console.log(data);
-  
-  // Build the form HTML
-  let addInventory = '<form action="/inventory/add-inventory" method="post">'
-  addInventory += '<label for="inv_make">Make:</label>'
-  addInventory += '<input type="text" id="inv_make" name="inv_make" required>'
-  addInventory += '<label for="inv_model">Model:</label>'
-  addInventory += '<input type="text" id="inv_model" name="inv_model" required>'
-  
-  addInventory += '<label for="classification_id">Classification:</label>'
-  addInventory += '<select name="classification_id" id="classification_id" required>'
-  addInventory += '<option value="">Choose a Classification</option>'
-  data.rows.forEach((row) => {
-    addInventory += '<option value="' + row.classification_id + '"'
-    if (classification_id != null && row.classification_id == classification_id) {
-      addInventory += ' selected'
-    }
-    addInventory += '>' + row.classification_name + '</option>'
-  })
-  addInventory += '</select>'
-  addInventory += '<button type="submit">Add Inventory</button>'
-  addInventory += '</form>'
-  //return addInventory
-
-
-  
-
-
-   
-  /*return `<form action="/inventory/add-inventory" method="post">
-            <label for="inv_make">Make:</label>
-            <input type="text" id="inv_make" name="inv_make" required>
-
-            <label for="inv_model">Model:</label>
-            <input type="text" id="inv_model" name="inv_model" required>
-            ${classificationList}
-
-            <button type="submit">Add Inventory</button>
-          </form>`
-          return addInventory
-}*/
-
-
-
-
-/*
-Util.addInventoryForm = async function (classification_id = null) {
+//update inventory form view
+Util.editInventoryForm = async function (inv_id) {
+  let classification_id = null 
+  let formData = {}
   const data = await invModel.getClassifications()
+  //const inv_id = parseInt(req.params.inventory_id)
+  const itemData = await invModel.getInventoryItemById(inv_id)
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`
 
-  let addInventory = '<form action="/inv/add-inventory" method="post" class="inventory-form">'
+  let editInventory = `<h1>${itemName}</h1>`
+   editInventory += '<div class="add-inventory-form-wrapper"><form id="updateForm" action="/inv/edit-inventory" method="post" class="inventory-form">'
+  //const selectedValue = formData.classification_id || classification_id
+   const selectedValue = itemData.classification_id || classification_id
 
-  // Classification first
-  addInventory += `
-    <div class="form-group">
-      <label for="classification_id">Classification:</label>
-      <select name="classification_id" id="classification_id" required>
-        <option value="">Choose a Classification</option>`
+editInventory += `
+  <div class="form-group">
+    <label for="classification_id">Classification:</label>
+    <select name="classification_id" id="classification_id" required>
+      <option value="">Choose a Classification</option>`
+//itemData.classification_id
+data.rows.forEach((row) => {
+  const selected = selectedValue == row.classification_id ? "selected" : ""
+  editInventory += `<option value="${row.classification_id}" ${selected}>${row.classification_name}</option>`
+})
 
-  data.rows.forEach((row) => {
-    addInventory += `<option value="${row.classification_id}"${classification_id == row.classification_id ? " selected" : ""}>${row.classification_name}</option>`
-  })
+editInventory += `</select>
+  </div>`
 
-  addInventory += `</select>
-    </div>`
 
   // Form Fields
   const fields = [
-    { id: 'inv_make', name: 'inv_make', value: '<%locals.inv_make%>', label: 'Make', type: 'text', required: true, pattern: '.{3,}', title: 'At least 3 characters' },
-    { id: 'inv_model', name: 'inv_model', value: '<%locals.inv_model%>', label: 'Model', type: 'text', required: true, pattern: '.{3,}', title: 'At least 3 characters' },
-    { id: 'inv_year', name: 'inv_year', value: '<%locals.inv_year%>', label: 'Year', type: 'number', required: true, pattern: '\\d{4}', title: '4-digit year', min: 1900, max: new Date().getFullYear() + 1 },
-    { id: 'inv_description', name: 'inv_description', value: '<%locals.inv_description%>', label: 'Description', type: 'text', required: true },
-    { id: 'inv_image', name: 'inv_image', value: '<%locals.inv_image%>', label: 'Image Path', type: 'text', required: true },
-    { id: 'inv_thumbnail', name: 'inv_thumbnail', value: '<%locals.inv_thumbnail%>', label: 'Thumbnail Path', type: 'text', required: true },
-    { id: 'inv_price', name: 'inv_price', value: '<%locals.inv_price%>',  label: 'Price', type: 'number', required: true, step: '0.01', min: '0' },
-    { id: 'inv_miles', name: 'inv_miles', value: '<%locals.inv_miles%>', label: 'Miles', type: 'number', required: true, min: '0' },
-    { id: 'inv_color', name: 'inv_color', value: '<%locals.inv_color%>', label: 'Color', type: 'text', required: true },
+    { id: 'inv_make', label: 'Make', type: 'text', required: true, pattern: '.{3,}', title: 'At least 3 characters' },
+    { id: 'inv_model', label: 'Model', type: 'text', required: true, pattern: '.{3,}', title: 'At least 3 characters' },
+    { id: 'inv_year', label: 'Year', type: 'number', required: true, pattern: '\\d{4}', title: '4-digit year', min: 1900, max: new Date().getFullYear() + 1 },
+    { id: 'inv_description', label: 'Description', type: 'text', required: true },
+    { id: 'inv_image', label: 'Image Path', type: 'text', required: true },
+    { id: 'inv_thumbnail', label: 'Thumbnail Path', type: 'text', required: true },
+    { id: 'inv_price', label: 'Price', type: 'number', required: true, step: '0.01', min: '0' },
+    { id: 'inv_miles', label: 'Miles', type: 'number', required: true, min: '0' },
+    { id: 'inv_color', label: 'Color', type: 'text', required: true },
+    
   ]
 
   for (const field of fields) {
-    addInventory += `
+    //const value = formData[field.id] || ""
+    const value = itemData[field.id] || ""
+    editInventory += `
       <div class="form-group">
         <label for="${field.id}">${field.label}:</label>
         <input 
           type="${field.type}" 
           id="${field.id}" 
           name="${field.id}" 
+          value="${value}"
           ${field.required ? 'required' : ''} 
           ${field.pattern ? `pattern="${field.pattern}"` : ''} 
           ${field.title ? `title="${field.title}"` : ''} 
@@ -326,14 +274,19 @@ Util.addInventoryForm = async function (classification_id = null) {
       </div>`
   }
 
-  addInventory += `
+  editInventory += `
     <div class="form-group">
-      <button type="submit">Add Inventory</button>
+    <input type="hidden" name="inv_id" value="${inv_id}">
     </div>
-  </form>`
+    <div class="form-group">
+      <button type="submit" disabled>Update Vehicle</button>
+    </div>
+    
+  </form></div>`
+  editInventory += `<script src="../../js/inv-update.js"></script>`
 
-  return addInventory
-}*/
+  return editInventory
+}
 
 
 Util.managementView = function () {
@@ -348,6 +301,45 @@ Util.errorView = function () {
           <p>error showcase</p>
           <a href="/">Go back to Home</a>`
 }
+
+
+/* ****************************************
+* Middleware to check token validity
+**************************************** */
+Util.checkJWTToken = (req, res, next) => {
+ if (req.cookies.jwt) {
+  jwt.verify(
+   req.cookies.jwt,
+   process.env.ACCESS_TOKEN_SECRET,
+   function (err, accountData) {
+    if (err) {
+     req.flash("Please log in")
+     res.clearCookie("jwt")
+     return res.redirect("/account/login")
+    }
+    res.locals.accountData = accountData
+    res.locals.loggedin = 1
+    next()
+   })
+ } else {
+  next()
+ }
+}
+
+
+/* ****************************************
+ *  Check Login
+ * ************************************ */
+ Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next()
+  } else {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+ }
+
+
 
 /* ****************************************
  * Middleware For Handling Errors
