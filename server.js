@@ -24,6 +24,8 @@ const pool = require('./database/')
 
 //cookie parser 
 app.use(cookieParser())
+app.use(utilities.decodeJWT);
+//app.use("/inv", utilities.authorizeInventoryAccess);
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
@@ -31,6 +33,7 @@ app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-
 
 // JWT check BEFORE route handling
 app.use(utilities.checkJWTToken)
+
 
 
 

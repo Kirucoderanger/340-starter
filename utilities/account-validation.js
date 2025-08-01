@@ -1,5 +1,6 @@
 const utilities = require(".")
 const accountModel = require("../models/account-model")
+const jwt = require("jsonwebtoken")
   const { body, validationResult } = require("express-validator")
   const validate = {}
 
@@ -24,17 +25,6 @@ const accountModel = require("../models/account-model")
         .notEmpty()
         .isLength({ min: 2 })
         .withMessage("Please provide a last name."), // on error this message is sent.
-  
-      // valid email is required and cannot already exist in the DB
-      /*body("account_email")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isEmail()
-      .normalizeEmail() // refer to validator.js docs
-      .withMessage("A valid email is required."),*/
-
-
       // valid email is required and cannot already exist in the database
         body("account_email")
         .trim()
@@ -65,6 +55,67 @@ const accountModel = require("../models/account-model")
     ]
   }
 
+  /*  **********************************
+  *  account update Data Validation Rules
+  * ********************************* */
+  validate.updateAccountRules = () => {
+    return [
+      // firstname is required and must be string
+      body("account_firstname")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isLength({ min: 1 })
+        .withMessage("Please provide a first name."), // on error this message is sent.
+  
+      // lastname is required and must be string
+      body("account_lastname")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isLength({ min: 2 })
+        .withMessage("Please provide a last name."), // on error this message is sent.
+      // valid email is required and cannot already exist in the database
+       /* body("account_email")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isEmail()
+        .normalizeEmail() // refer to validator.js docs
+        .withMessage("A valid email is required.")
+        .custom(async (account_email) => {
+            const emailExists = await accountModel.checkExistingEmail(account_email)
+            if (emailExists){
+            throw new Error("Email exists. Please provide a different email")
+            }
+        }),*/
+      body("account_email")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isEmail()
+        .normalizeEmail() // refer to validator.js docs
+        .withMessage("A valid email is required")
+        .custom(async (newEmail, { req }) => {
+          // Step 1: Get user email from JWT (assume stored in cookie or header)
+          const token = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
+          if (!token) throw new Error("Unauthorized");
+
+          const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+          const currentEmail = decoded.account_email;
+
+          // Step 2: If email hasn't changed, allow it
+          if (newEmail === currentEmail) return true;
+
+          // Step 3: If email changed, check for uniqueness in DB
+          const existing = await accountModel.checkExistingEmail(newEmail);
+          if (existing) throw new Error("Email exists. Please provide a different email");
+
+          return true;
+    }),
+    ]
+  }
+
 
   /* ******************************
  * Check data and return errors or continue to registration
@@ -86,6 +137,60 @@ validate.checkRegData = async (req, res, next) => {
     return
   }
   next()
+}
+
+/* ******************************
+ * Check data and return errors or continue to updating account
+ * ***************************** */
+validate.updateAccountData = async (req, res, next) => {
+  const { account_firstname, account_lastname, account_email } = req.body
+  let errors = []
+  errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("account/update-account", {
+      errors,
+      title: "account/update-account",
+      nav,
+      account_firstname,
+      account_lastname,
+      account_email,
+    })
+    return
+  }
+  next()
+}
+
+validate.updateAccountPassword = async (req, res, next) => {
+  const { account_id, account_password } = req.body
+  let errors = []
+  errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("account/update-account", {
+      errors,
+      title: "account/update-account",
+      nav,
+      account_id,
+      account_password,
+    })
+    return
+  }
+  next()
+}
+
+/******
+ * account password validation rule for update
+ */
+validate.passwordUpdateRule = () => {
+  return [
+    body("account_password")
+      .trim()
+      .isLength({ min: 12 })
+      .withMessage("Password must be at least 12 characters long.")
+      .matches(/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])/)
+      .withMessage("Password must contain at least 1 number, 1 capital letter, and 1 special character."),
+  ]
 }
 
 /******

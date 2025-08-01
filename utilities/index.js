@@ -4,6 +4,7 @@ const Util = {}
 
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
+const process = require("process");
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
@@ -130,7 +131,7 @@ Util.buildClassificationList = async function (classification_id = null) {
   
     let data = await invModel.getClassifications()
     let classificationList =
-      '<form><select name="classification_id" id="classificationList" required>'
+      '<form class="invClassification"><label for="classification_id">Classification:</label><select name="classification_id" id="classificationList" required>'
     classificationList += "<option value=''>Choose a Classification</option>"
     data.rows.forEach((row) => {
       classificationList += '<option value="' + row.classification_id + '"'
@@ -289,6 +290,63 @@ editInventory += `</select>
 }
 
 
+Util.deleteInventoryForm = async function (inv_id) {
+
+  const data = await invModel.getClassifications()
+  //const inv_id = parseInt(req.params.inventory_id)
+  const itemData = await invModel.getInventoryItemById(inv_id)
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`
+
+  let deleteInventory = `<h1>${itemName}</h1>`
+  deleteInventory +=`<p>Confirm Deletion - The delete is permanent.</p>`
+   deleteInventory += '<div class="add-inventory-form-wrapper"><form id="deleteForm" action="/inv/delete-inventory" method="post" class="inventory-form">'
+  
+  // Form Fields
+  const fields = [
+    { id: 'inv_make', label: 'Make', type: 'text', required: true, pattern: '.{3,}', title: 'At least 3 characters'},
+    { id: 'inv_model', label: 'Model', type: 'text', required: true, pattern: '.{3,}', title: 'At least 3 characters' },
+    { id: 'inv_year', label: 'Year', type: 'number', required: true, pattern: '\\d{4}', title: '4-digit year', min: 1900, max: new Date().getFullYear() + 1 },
+    { id: 'inv_price', label: 'Price', type: 'number', required: true, step: '0.01', min: '0' },
+    
+  ]
+
+  for (const field of fields) {
+    //const value = formData[field.id] || ""
+    const value = itemData[field.id] || ""
+    deleteInventory += `
+      <div class="form-group">
+        <label for="${field.id}">${field.label}:</label>
+        <input 
+          type="${field.type}" 
+          id="${field.id}" 
+          name="${field.id}" 
+          value="${value}"
+          readonly
+          ${field.required ? 'required' : ''} 
+          ${field.pattern ? `pattern="${field.pattern}"` : ''} 
+          ${field.title ? `title="${field.title}"` : ''} 
+          ${field.step ? `step="${field.step}"` : ''} 
+          ${field.min ? `min="${field.min}"` : ''} 
+          ${field.max ? `max="${field.max}"` : ''} 
+        >
+      </div>`
+  }
+
+  deleteInventory += `
+    <div class="form-group">
+    <input type="hidden" name="inv_id" value="${inv_id}">
+    </div>
+    <div class="form-group">
+      <button type="submit">Delete Vehicle</button>
+    </div>
+    
+  </form></div>`
+  
+
+  return deleteInventory
+}
+
+
 Util.managementView = function () {
   return `<h1>Inventory Management</h1>
           <ul>
@@ -338,6 +396,78 @@ Util.checkJWTToken = (req, res, next) => {
     return res.redirect("/account/login")
   }
  }
+
+ /*Util.decodeJWT = (req, res, next) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    res.locals.loggedIn = false;
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.locals.loggedIn = true;
+    res.locals.accountData = decoded; // Optional: pass user info
+  } catch (err) {
+    res.locals.loggedIn = false;
+  }
+
+  next();
+}
+*/
+
+Util.decodeJWT = (req, res, next) => {
+  const token = req.cookies.jwt;
+  console.log("JWT Token:", token);
+
+  if (!token) {
+    console.log("No JWT found");
+    res.locals.loggedIn = false;
+    return next();
+  }
+
+  try {
+    //const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    console.log("JWT decoded:", decoded);
+    res.locals.loggedIn = true;
+    res.locals.accountData = decoded;
+  } catch (err) {
+    console.log("JWT verification failed:", err.message);
+    res.locals.loggedIn = false;
+  }
+
+  next();
+};
+
+
+Util.authorizeInventoryAccess = (req, res, next) => {
+  
+  const token = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (decoded.account_type === "admin" || decoded.account_type === "employee") {
+      req.user = decoded; // store user info for use in route
+      next();
+    } else {
+      
+
+      req.flash("notice", "your credential is not Authorized to access the inventory management Please log in with the right credential.")
+    return res.redirect("/account/login")
+      
+    }
+  } catch (err) {
+    req.flash("notice", "your credential is not Authorized to access the inventory management Please log in with the right credential.")
+    return res.redirect("/account/login")
+  }
+}
 
 
 

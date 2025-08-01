@@ -167,7 +167,7 @@ validate.checkEditInventoryData = async (req, res, next) => {
 
     res.render("inventory/edit-inventory", {
       errors,
-      title: "Edit Inventory",
+      title: `Edit ${inv_make} ${inv_model}`,
       nav,
       inv_make,
       inv_model,
@@ -180,6 +180,75 @@ validate.checkEditInventoryData = async (req, res, next) => {
       inv_thumbnail,
       inv_id,
       editInventoryForm,
+    })
+    return
+  }
+  next()
+}
+
+
+
+/*******************
+ * Add Inventory Validation Rules
+ * returns Array of validation rules for adding inventory
+ */
+validate.deleteInventoryRules = () => {
+  return [
+    
+    // inv_year is required and must be a valid year
+    body("inv_year")
+      .trim()
+      .notEmpty()
+      .isInt({ min: 1900, max: new Date().getFullYear() })
+      .withMessage("Please enter a valid year."),
+
+    // inv_make is required and must be greater than 3 characters
+    body("inv_make")
+      .trim()
+      .notEmpty()
+      .isString()
+      .isLength({ min: 3 })
+      .withMessage("Make must be at least 3 characters long."),
+
+    // inv_model is required and must be greater than 3 characters
+    body("inv_model")
+      .trim()
+      .notEmpty()
+      .isString()
+      .isLength({ min: 3 })
+      .withMessage("Model must be at least 3 characters long."),
+
+    
+    // inv_price is required and must be an integer or float greater than 0
+    body("inv_price")
+      .trim()
+      .notEmpty()
+      .isFloat({ min: 0 })
+      .withMessage("Please enter a valid price.")
+    
+  ]
+}
+
+
+validate.checkDeleteInventoryData = async (req, res, next) => {
+  const { inv_make, inv_model, inv_year, inv_price, inv_id } = req.body
+  let errors = []
+  errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    //let addInventoryForm = await utilities.addInventoryForm()
+    let deleteInventoryForm = await utilities.deleteInventoryForm(req.body.inv_id, req.body)
+
+    res.render("inventory/delete-confirm", {
+      errors,
+      title: "Delete Inventory",
+      nav,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_price,
+      inv_id,
+      deleteInventoryForm,
     })
     return
   }

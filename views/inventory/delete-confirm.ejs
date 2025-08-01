@@ -4,7 +4,7 @@
   res.redirect('/')
 } %>
 
-<div class="updateInv">
+<div class="deleteInv">
 <%- messages() %>
 <% if (errors && errors.array().length > 0) { %>
         <ul class="notice">
@@ -14,5 +14,5 @@
             </ul>
             <% } %>
 
-<%- editInventoryForm %>
+<%- deleteInventoryForm %>
 </div>

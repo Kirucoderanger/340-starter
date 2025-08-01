@@ -119,11 +119,12 @@ async function addInventory(req, res) {
       "notice",
       `Inventory item ${inv_make} ${inv_model} added successfully.`
     )
-    res.status(201).render("inventory/management", {
+    /*res.status(201).render("inventory/management", {
       title: "Inventory Management",
       nav,
       managementView,
-    })
+    })*/
+    return res.redirect("/inv/") // ✅ Redirect to inventory management page
   } else {
     req.flash("notice", "Failed to add inventory item.")
     res.status(501).render("inventory/add-inventory", {
@@ -149,6 +150,23 @@ const buildUpdateInventory = async (req, res) => {
     nav,
     errors: null,
     editInventoryForm,
+   
+  })
+}
+
+
+// Display delete Inventory Form
+const buildDeleteInventory = async (req, res) => {
+  const inv_id = parseInt(req.params.inventory_id)
+    let nav = await utilities.getNav()
+    const itemData = await invModel.getInventoryItemById(inv_id)
+    let deleteInventoryForm = await utilities.deleteInventoryForm(inv_id)
+    const itemName = `${itemData.inv_make} ${itemData.inv_model}` 
+  res.render("inventory/delete-confirm", {
+    title: "Delete " + itemName,
+    nav,
+    errors: null,
+    deleteInventoryForm,
    
   })
 }
@@ -221,6 +239,50 @@ async function editInventory(req, res) {
   }
 }
 
+
+/***********************
+ * delete inventory item controller 
+ */
+
+async function deleteInventory(req, res) {
+  let nav = await utilities.getNav()
+
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_price,
+  
+  } = req.body
+
+  try {
+    const dbResult = await invModel.deleteInventory(inv_id)
+
+    if (dbResult && dbResult.rowCount > 0) {
+      const itemName = `${inv_make} ${inv_model}`
+      req.flash("notice", `The ${itemName} was successfully deleted.`)
+      return res.redirect("/inv/") // ✅ Redirect to inventory management page
+    } else {
+      throw new Error("No rows deleted")
+    }
+  } catch (err) {
+    req.flash("notice", "Failed to delete inventory item.")
+    const deleteInventoryForm = await utilities.deleteInventoryForm(inv_id)
+    res.status(500).render("inventory/delete-confirm", {
+      title: `Delete ${inv_make} ${inv_model}`,
+      nav,
+      deleteInventoryForm,
+      errors: null,
+      inv_id,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_price
+      
+    })
+  }
+}
 /*async function editInventory(req, res) {
   let nav = await utilities.getNav()
   let managementView = utilities.managementView()
@@ -302,5 +364,7 @@ module.exports = {
   addClassification,
   addInventory,
   buildUpdateInventory,
-  editInventory
+  editInventory,
+  buildDeleteInventory,
+  deleteInventory
 }

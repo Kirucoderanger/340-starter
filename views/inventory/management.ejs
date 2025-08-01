@@ -5,12 +5,16 @@
 } %>
 
 
-<%- messages() %>
 
 
-<%- managementView %>
-<h2>Manage Inventory</h2>
+
+
+<div class="invmgt">
+  <%- managementView %>
+  <%- messages() %>
+<h2> Select classification  for Inventory </h2>
 <%- classificationSelect  %>
 <table id="inventoryDisplay"></table>
+</div>
 <noscript>JavaScript must be enabled to use this page.</noscript>
 <script src="../../js/inventory.js"></script>

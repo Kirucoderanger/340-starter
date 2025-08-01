@@ -23,7 +23,9 @@ router.get("/detail/:inventoryId", invController.getInventoryItemById);
 
 
 // Inventory Management View
-router.get("/", utilities.handleErrors(inventoryController.buildManagementView))
+router.get("/", utilities.authorizeInventoryAccess, utilities.handleErrors(inventoryController.buildManagementView))
+//router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildMyAccount))
+
 
 // Add Classification View
 router.get("/add-classification", utilities.handleErrors(inventoryController.buildAddClassification))
@@ -36,6 +38,9 @@ router.get("/getInventory/:classification_id", utilities.handleErrors(invControl
 
 //update inventory 
 router.get("/edit-inventory/:inventory_id", utilities.handleErrors(inventoryController.buildUpdateInventory))
+
+//delete inventory 
+router.get("/delete-inventory/:inventory_id", utilities.handleErrors(inventoryController.buildDeleteInventory))
 
 
 // Add Classification POST
@@ -59,5 +64,11 @@ router.post("/edit-inventory",
   utilities.handleErrors(inventoryController.editInventory)
 )
 
+//delete-inventory
+router.post("/delete-inventory",
+  inventoryValidate.deleteInventoryRules(),
+  inventoryValidate.checkDeleteInventoryData,
+  utilities.handleErrors(inventoryController.deleteInventory)
+)
 
 module.exports = router;

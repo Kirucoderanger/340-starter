@@ -15,8 +15,15 @@ const regValidate = require('../utilities/account-validation')
 
 router.get("/login", utilities.handleErrors(accountController.buildLogin))
 router.get("/register", utilities.handleErrors(accountController.buildRegister))
+router.get("/update-account", utilities.handleErrors(accountController.buildUpdateAccount))
+
 //router.get("/myAccount", utilities.handleErrors(accountController.buildMyAccount))
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildMyAccount))
+router.get('/logout', (req, res) => {
+  res.clearCookie('jwt') // assuming your JWT is in a cookie named 'jwt'
+  req.flash('notice', 'You have been logged out.')
+  res.redirect('/') // or wherever you want to send the user
+})
 
 //register user in to database
 router.post(
@@ -46,6 +53,21 @@ router.post(
   regValidate.checkLoginData,
   utilities.handleErrors(accountController.accountLogin)
 )
+
+router.post(
+  "/update-account",
+  regValidate.updateAccountRules(),
+  regValidate.updateAccountData,
+  utilities.handleErrors(accountController.updateAccount)
+)
+
+router.post(
+  "/update-account-password",
+  regValidate.passwordUpdateRule(),
+  regValidate.updateAccountPassword,
+  utilities.handleErrors(accountController.updateAccountPassword)
+)
+
 
 
 
