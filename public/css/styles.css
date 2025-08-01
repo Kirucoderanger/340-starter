@@ -585,7 +585,7 @@ nav a {
 .login-form button {
   width: 100%;
   padding: 0.75rem;
-  background-color: #007bff;
+  background-color: #1962b0;
   border: none;
   color: #fff;
   font-size: 1rem;
@@ -605,7 +605,7 @@ nav a {
 }
 
 .register-link a {
-  color: #007bff;
+  color: #0c417a;
   text-decoration: none;
   font-weight: 500;
 }
@@ -682,7 +682,7 @@ nav a {
 .password-toggle button {
   background: none;
   border: none;
-  color: #007bff;
+  color: #114e8f;
   font-size: 0.9rem;
   cursor: pointer;
 }
@@ -694,7 +694,7 @@ nav a {
 .register-button {
   width: 100%;
   padding: 0.8rem;
-  background-color: #007bff;
+  background-color: #0e57a5;
   border: none;
   color: white;
   font-size: 1rem;
@@ -705,7 +705,7 @@ nav a {
 }
 
 .register-button:hover {
-  background-color: #0056b3;
+  background-color: #2c74c1;
 }
 
 .login-link {
@@ -715,7 +715,7 @@ nav a {
 }
 
 .login-link a {
-  color: #007bff;
+  color: #0a4c92;
   text-decoration: none;
   font-weight: 500;
 }
