@@ -1,5 +1,6 @@
 const utilities = require(".")
 const invModel = require("../models/inventory-model")
+const reviewModel = require("../models/reviewModel");
 const { body, validationResult } = require("express-validator")
 const validate = {}
 
@@ -125,6 +126,68 @@ validate.addInventoryRules = () => {
       .withMessage("Image must be a valid URL starting with /images/")
   ]
 }
+
+// review-validation rule
+
+
+validate.addReviewRules = () => {
+  return [
+    body("vehicle_id")
+      .trim()
+      .notEmpty()
+      .isInt({ min: 1 })
+      .withMessage("A valid vehicle ID is required."),
+
+    body("rating")
+      .notEmpty()
+      .isInt({ min: 1, max: 5 })
+      .withMessage("Rating must be a number between 1 and 5."),
+
+    body("review_text")
+      .trim()
+      .notEmpty()
+      .isLength({ min: 10 })
+      .withMessage("Review text must be at least 10 characters long.")
+  ];
+};
+
+// Review validation check
+validate.checkReviewData = async (req, res, next) => {
+  const { vehicle_id, review_text, rating } = req.body
+  let errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    /*const inventory_id = req.params.inventoryId
+      const item = await invModel.getInventoryItemById(vehicle_id)
+      const reviews = await reviewModel.getReviewsByVehicle(vehicle_id);
+    // Fetch vehicle details again so we can re-render the review page properly
+    // This assumes you have a function in your model to get vehicle details
+    const nav = await utilities.getNav()
+      const itemDetails = await utilities.getInventoryItemById(vehicle_id)
+      res.render("./inventory/inventoryDetail", {
+        title: item.inv_year + " " + item.inv_make + " " + item.inv_model,
+        nav,
+        item: itemDetails,
+        inventory_id,
+        reviews,
+        //loggedIn: req.session.account_id ? true : false
+        loggedIn: req.cookies.jwt? true : false,
+        errors: null,
+        //const token = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
+       
+      review_text,
+      rating
+      })*/
+      res.redirect(`/inv/detail/${vehicle_id}`);
+    return
+  }
+  next()
+}
+
+
+
+
+
 
 validate.checkInventoryData = async (req, res, next) => {
   const { inv_make, inv_model, inv_year, inv_price, inv_description, inv_color, inv_miles, inv_image, inv_thumbnail } = req.body

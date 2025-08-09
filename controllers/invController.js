@@ -1,5 +1,6 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
+const reviewModel = require("../models/reviewModel");
 
 const invCont = {}
 
@@ -12,9 +13,9 @@ invCont.buildByClassificationId = async function (req, res, next) {
   const grid = await utilities.buildClassificationGrid(data)
   let nav = await utilities.getNav()
   const className = data[0].classification_name
-  res.render("./inventory/classification", {
+  res.render("./inventory/classification", { 
     title: className + " vehicles",
-    nav,
+    nav, 
     grid,
   })
 }
@@ -25,6 +26,7 @@ invCont.buildByClassificationId = async function (req, res, next) {
 invCont.getInventoryItemById = async function (req, res, next) {
   const inventory_id = req.params.inventoryId
   const item = await invModel.getInventoryItemById(inventory_id)
+  const reviews = await reviewModel.getReviewsByVehicle(inventory_id);
   if (!item) {
     return res.status(404).send("Item not found")
   }
@@ -34,6 +36,12 @@ invCont.getInventoryItemById = async function (req, res, next) {
     title: item.inv_year + " " + item.inv_make + " " + item.inv_model,
     nav,
     item: itemDetails,
+    inventory_id,
+    reviews,
+    //loggedIn: req.session.account_id ? true : false
+    loggedIn: req.cookies.jwt? true : false,
+    errors: null
+    //const token = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
   })
 }
 
