@@ -5,7 +5,8 @@
 } %>
 
 
-<%# messages() %>
+<% messages() %>
+
 <% if (errors && errors.array().length > 0) { %>
         <ul class="notice">
             <% errors.array().forEach(error => { %>
@@ -14,8 +15,9 @@
             </ul>
             <% } %>
 
-
+<div id="invdetail">
 <%- item %>
+
 
 
 <section class="reviews-section">
@@ -46,7 +48,7 @@
     </div>
 
     <% if (loggedIn) { %>
-        <form action="/reviews/add" method="POST" class="review-form">
+        <form action="/reviews/add/" method="POST" class="review-form">
             <input type="hidden" name="vehicle_id" value="<%= locals.inventory_id %>">
 
             <div class="form-group">
@@ -62,7 +64,7 @@
 
             <div class="form-group">
                 <label for="review_text">Your Review:</label>
-                <textarea name="review_text" id="review_text" rows="4" placeholder="Share your thoughts..." required></textarea>
+                <textarea name="review_text" id="review_text" rows="4" placeholder="Write your thoughts here..."  required value="<%= locals.review_text %>"></textarea>
             </div>
 
             <button type="submit" class="btn-submit">Submit Review</button>
@@ -71,3 +73,4 @@
         <p class="login-prompt"><a href="/account/login">Log in</a> to leave a review.</p>
     <% } %>
 </section>
+</div>

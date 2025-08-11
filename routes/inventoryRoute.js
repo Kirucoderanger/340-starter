@@ -6,10 +6,16 @@ const inventoryController = require("../controllers/inventoryController")
 const utilities = require("../utilities/")
 const classificationValidate = require('../utilities/inventory-validation')
 const inventoryValidate = require('../utilities/inventory-validation')
+const reviewController = require("../controllers/reviewController");
+
+
 // Route to build inventory by classification view
 router.get("/type/:classificationId", invController.buildByClassificationId);
 // Route to build inventory item details view
-router.get("/detail/:inventoryId", invController.getInventoryItemById);
+//router.get("/detail/:inventoryId", invController.getInventoryItemById);
+//review inventory
+router.get("/detail/:inventoryId", utilities.handleErrors(invController.getInventoryItemById));
+//router.get("/detail/:inventory_id", utilities.handleErrors(invController.getInventoryItemById))
 /*router.get("/detail/:inventoryId", async (req, res, next) => {
   const inventoryId = req.params.inventoryId
   const data = await invModel.getInventoryItemDetails(inventoryId)
@@ -43,6 +49,7 @@ router.get("/edit-inventory/:inventory_id", utilities.handleErrors(inventoryCont
 router.get("/delete-inventory/:inventory_id", utilities.handleErrors(inventoryController.buildDeleteInventory))
 
 
+
 // Add Classification POST
 router.post("/add-classification",
   classificationValidate.addClassificationRules(),
@@ -70,5 +77,15 @@ router.post("/delete-inventory",
   inventoryValidate.checkDeleteInventoryData,
   utilities.handleErrors(inventoryController.deleteInventory)
 )
+
+
+//review inventory
+
+//const inventoryValidate = require('../utilities/inventory-validation')
+
+router.post("/add",
+    inventoryValidate.addReviewRules(),
+    inventoryValidate.checkReviewData, 
+    utilities.handleErrors(reviewController.postReview));
 
 module.exports = router;

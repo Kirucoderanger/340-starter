@@ -18,8 +18,8 @@ async function postReview(req, res) {
         res.redirect(`/inv/detail/${vehicle_id}`);
     } catch (err) {
         console.error(err);
-        res.status(500).send("Server error while posting review.");
-    }
+        res.status(500).send("Server error while posting review.");  
+    } 
 }
 
 module.exports = { postReview };

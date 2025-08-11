@@ -955,6 +955,10 @@ nav a {
 
 
 /*review on viechle detail */
+#invdetail {
+  grid-column: 1 / 3;
+
+}
 
 .reviews-section {
     background: #f9f9f9;

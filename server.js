@@ -37,15 +37,6 @@ app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-
 
 // JWT check BEFORE route handling
 app.use(utilities.checkJWTToken)
-
-
-
-
-
-
-
-
-
 /* ***********************
  * Middleware
  * ************************/
@@ -59,9 +50,6 @@ app.use(utilities.checkJWTToken)
   saveUninitialized: true,
   name: 'sessionId',
 }))
-
-
-
 // Express Messages Middleware
 app.use(require('connect-flash')())
 app.use(function(req, res, next){
@@ -74,11 +62,6 @@ app.use((req, res, next) => {
   res.locals.messages = require("express-messages")(req, res)
   next()
 })
-
-
-
-
-
 /* ***********************
  * View Engine and Templates
  *************************/
@@ -90,39 +73,13 @@ app.set("layout", "./layouts/layout") // not at views root
  * Routes
  *************************/
 app.use(static)
-
-//Index route
-/*app.get("/", function(req, res){
-  res.render("index", {title: "Home"})
-})*/
-// Base controller route
-//app.get("/", baseController.buildHome)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory route
 app.use("/inv", inventoryRoute)
 //default route for accounts
-//app.use("/account", utilities.checkLogin, utilities.handleErrors(accountController.buildMyAccount))
-// Account route
 app.use("/account", accountRoute)
-
-app.use("/reviews", reviewRoutes);
-
-
-//app.use("/account", require("./routes/accountRoute"))
-
+app.use("/reviews", reviewRoutes)
 app.use("/errors", errorTriggerRoute);
-
-
-
-
-// Body parser middleware
-//app.use(bodyParser.urlencoded({ extended: true }))
-//app.use(bodyParser.json())
-
-
-
-
-
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: `Sorry, we appear to have lost that page.  <img loading="lazy" src="https://inzonedesign.com/wp-content/uploads/2021/02/blog-cleverly-funny-creative-404-error-pages-hoppermagic.jpg" alt="404 error page" width="740" height="600"/>`})
@@ -149,10 +106,6 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).render("error", { error: err }); // Send to your error view
 });
-
-
-
-
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file
@@ -167,10 +120,3 @@ app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
 })
 
-/*
-const PORT = process.env.PORT || 5500;
-
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
-    */

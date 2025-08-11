@@ -3,6 +3,7 @@ const invModel = require("../models/inventory-model")
 const reviewModel = require("../models/reviewModel");
 const { body, validationResult } = require("express-validator")
 const validate = {}
+const invCont = require("../controllers/invController");
 
 /**
  * Add Classification Validation Rules
@@ -157,28 +158,36 @@ validate.checkReviewData = async (req, res, next) => {
   let errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    /*const inventory_id = req.params.inventoryId
+    //const inventory_id = req.params.inventoryId
+    const inventory_id = vehicle_id
       const item = await invModel.getInventoryItemById(vehicle_id)
       const reviews = await reviewModel.getReviewsByVehicle(vehicle_id);
     // Fetch vehicle details again so we can re-render the review page properly
     // This assumes you have a function in your model to get vehicle details
     const nav = await utilities.getNav()
       const itemDetails = await utilities.getInventoryItemById(vehicle_id)
+       //invCont.getInventoryItemById()
+       //res.redirect(`/inv/detail/${vehicle_id}`); 
+       //res.redirect(`/inv/detail/${vehicle_id}`,{
+
+       
       res.render("./inventory/inventoryDetail", {
+      
         title: item.inv_year + " " + item.inv_make + " " + item.inv_model,
         nav,
         item: itemDetails,
-        inventory_id,
         reviews,
         //loggedIn: req.session.account_id ? true : false
         loggedIn: req.cookies.jwt? true : false,
-        errors: null,
+        errors,
         //const token = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
        
       review_text,
+      inventory_id,
       rating
-      })*/
-      res.redirect(`/inv/detail/${vehicle_id}`);
+      })
+      
+      
     return
   }
   next()
@@ -193,14 +202,14 @@ validate.checkInventoryData = async (req, res, next) => {
   const { inv_make, inv_model, inv_year, inv_price, inv_description, inv_color, inv_miles, inv_image, inv_thumbnail } = req.body
   let errors = []
   errors = validationResult(req)
-  if (!errors.isEmpty()) {
+  if (!errors.isEmpty()) { 
     let nav = await utilities.getNav()
     //let addInventoryForm = await utilities.addInventoryForm()
     let addInventoryForm = await utilities.addInventoryForm(req.body.classification_id, req.body)
 
     res.render("inventory/add-inventory", {
       errors,
-      title: "Add New Inventory",
+      title: "Add New Inventory", 
       nav,
       inv_make,
       inv_model,
