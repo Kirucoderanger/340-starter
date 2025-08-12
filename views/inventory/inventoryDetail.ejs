@@ -67,7 +67,7 @@
                 <textarea name="review_text" id="review_text" rows="4" placeholder="Write your thoughts here..."  required value="<%= locals.review_text %>"></textarea>
             </div>
 
-            <button type="submit" class="btn-submit">Submit Review</button>
+            <button id="submit-review-btn" type="submit" class="btn-submit">Submit Review</button>
         </form>
     <% } else { %>
         <p class="login-prompt"><a href="/account/login">Log in</a> to leave a review.</p>
